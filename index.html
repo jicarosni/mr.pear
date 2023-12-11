@@ -55,7 +55,11 @@
 
     <h1>Mr. Pear</h1>
 
-    <img src="image.png" alt="Mr. Pear's Image">
+    <!-- Button to toggle the visibility of the character avatar -->
+    <button onclick="toggleAvatar()">Toggle Avatar</button>
+
+    <!-- Character avatar image -->
+    <img id="avatar" style="display: none;" alt="Character Avatar">
 
     <h2>Locations from Rick and Morty API</h2>
     
@@ -112,6 +116,31 @@
                 locationsTable.style.display = 'none';
                 locationsVisible = false;
             }
+        }
+
+        // Function to toggle the visibility of the character avatar
+        function toggleAvatar() {
+            const avatarImage = document.getElementById('avatar');
+
+            // Toggle the display property
+            avatarImage.style.display = (avatarImage.style.display === 'none') ? 'block' : 'none';
+        }
+
+        // Initial load: Fetch a random character avatar when the page loads
+        fetchRandomAvatar();
+
+        // Function to fetch a random character avatar from the Rick and Morty API
+        function fetchRandomAvatar() {
+            const avatarImage = document.getElementById('avatar');
+
+            // Generate a random number between 1 and 200 for character ID
+            const characterId = Math.floor(Math.random() * 200) + 1;
+
+            // Set the avatar image source
+            avatarImage.src = `https://rickandmortyapi.com/api/character/avatar/${characterId}.jpeg`;
+
+            // Make the avatar visible
+            avatarImage.style.display = 'block';
         }
     </script>
 
