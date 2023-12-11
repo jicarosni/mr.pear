@@ -3,185 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mr. Pear's Modern Website</title>
+    <title>Floating DVD Logo</title>
 
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             overflow: hidden;
-            background-color: #282c34;
-            color: white;
+            background-color: #111;
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
         }
 
-        #content {
-            text-align: center;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        h1 {
-            color: #61dafb;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            color: #61dafb;
-        }
-
-        button {
-            background-color: #61dafb;
-            color: white;
-            padding: 10px 20px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            color: white;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #61dafb;
-            color: white;
-        }
-
-        /* Floating elements */
-        .floating {
+        #dvd-logo {
             position: absolute;
-            animation: floatAnimation 5s infinite ease-in-out;
-        }
-
-        .floating:nth-child(2) {
-            animation-delay: 1s;
-        }
-
-        .floating:nth-child(3) {
-            animation-delay: 2s;
-        }
-
-        @keyframes floatAnimation {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
+            width: 80px;
+            height: 40px;
+            background-color: #e50914;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            user-select: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- Floating elements -->
-    <div class="floating">🚀</div>
-    <div class="floating">🌟</div>
-    <div class="floating">🌈</div>
-
-    <div id="content">
-        <h1>Mr. Pear</h1>
-
-        <!-- Button to fetch and display a new random character avatar -->
-        <button onclick="fetchRandomAvatar()">Fetch Random Avatar</button>
-
-        <!-- Character avatar image -->
-        <img id="avatar" alt="Character Avatar">
-
-        <h2>Locations from Rick and Morty API</h2>
-        
-        <!-- Button to fetch and display or hide API data -->
-        <button onclick="toggleLocations()">Toggle Locations</button>
-
-        <!-- Table to display locations -->
-        <table id="locations-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Dimension</th>
-                </tr>
-            </thead>
-            <tbody id="locations-list"></tbody>
-        </table>
-    </div>
+    <div id="dvd-logo">DVD</div>
 
     <script>
-        // Variable to track the visibility of locations
-        let locationsVisible = false;
+        const dvdLogo = document.getElementById('dvd-logo');
 
-        // Function to fetch data from the Rick and Morty API and display or hide it
-        function toggleLocations() {
-            const locationsTable = document.getElementById('locations-table');
-            const locationsList = document.getElementById('locations-list');
+        // Initial position and speed
+        let x = Math.random() * (window.innerWidth - dvdLogo.clientWidth);
+        let y = Math.random() * (window.innerHeight - dvdLogo.clientHeight);
+        let speedX = (Math.random() > 0.5 ? 1 : -1) * (2 + Math.random() * 2);
+        let speedY = (Math.random() > 0.5 ? 1 : -1) * (2 + Math.random() * 2);
 
-            if (!locationsVisible) {
-                // Fetch data from the Rick and Morty API
-                fetch('https://rickandmortyapi.com/api/location')
-                    .then(response => response.json())
-                    .then(data => {
-                        // Process the data and display it on the webpage
-                        locationsList.innerHTML = ''; // Clear previous entries
+        function moveDVDLogo() {
+            x += speedX;
+            y += speedY;
 
-                        data.results.forEach(location => {
-                            const row = locationsList.insertRow();
-                            const cell1 = row.insertCell(0);
-                            const cell2 = row.insertCell(1);
-                            const cell3 = row.insertCell(2);
-
-                            cell1.textContent = location.name;
-                            cell2.textContent = location.type;
-                            cell3.textContent = location.dimension;
-                        });
-
-                        // Show the locations table
-                        locationsTable.style.opacity = '1';
-                        locationsTable.style.transform = 'translateY(0)';
-                        locationsVisible = true;
-                    })
-                    .catch(error => console.error('Error fetching data:', error));
-            } else {
-                // Hide the locations table
-                locationsTable.style.opacity = '0';
-                locationsTable.style.transform = 'translateY(20px)';
-                locationsVisible = false;
+            // Bounce off the horizontal walls
+            if (x + dvdLogo.clientWidth > window.innerWidth || x < 0) {
+                speedX = -speedX;
             }
+
+            // Bounce off the vertical walls
+            if (y + dvdLogo.clientHeight > window.innerHeight || y < 0) {
+                speedY = -speedY;
+            }
+
+            // Update the position
+            dvdLogo.style.left = `${x}px`;
+            dvdLogo.style.top = `${y}px`;
+
+            // Request the next animation frame
+            requestAnimationFrame(moveDVDLogo);
         }
 
-        // Function to fetch a new random character avatar from the Rick and Morty API
-        function fetchRandomAvatar() {
-            const avatarImage = document.getElementById('avatar');
+        // Start the animation
+        moveDVDLogo();
 
-            // Generate a random number between 1 and 200 for character ID
-            const characterId = Math.floor(Math.random() * 200) + 1;
-
-            // Set the avatar image source
-            avatarImage.src = `https://rickandmortyapi.com/api/character/avatar/${characterId}.jpeg`;
-        }
-
-        // Initial load: Fetch a random character avatar when the page loads
-        fetchRandomAvatar();
+        // Optional: Add a click event to stop the animation
+        dvdLogo.addEventListener('click', () => {
+            cancelAnimationFrame(moveDVDLogo);
+        });
     </script>
 
 </body>
