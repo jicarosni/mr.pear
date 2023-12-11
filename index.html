@@ -55,11 +55,11 @@
 
     <h1>Mr. Pear</h1>
 
-    <!-- Button to toggle the visibility of the character avatar -->
-    <button onclick="toggleAvatar()">Toggle Avatar</button>
+    <!-- Button to fetch and display a new random character avatar -->
+    <button onclick="fetchRandomAvatar()">Fetch Random Avatar</button>
 
     <!-- Character avatar image -->
-    <img id="avatar" style="display: none;" alt="Character Avatar">
+    <img id="avatar" alt="Character Avatar">
 
     <h2>Locations from Rick and Morty API</h2>
     
@@ -118,18 +118,7 @@
             }
         }
 
-        // Function to toggle the visibility of the character avatar
-        function toggleAvatar() {
-            const avatarImage = document.getElementById('avatar');
-
-            // Toggle the display property
-            avatarImage.style.display = (avatarImage.style.display === 'none') ? 'block' : 'none';
-        }
-
-        // Initial load: Fetch a random character avatar when the page loads
-        fetchRandomAvatar();
-
-        // Function to fetch a random character avatar from the Rick and Morty API
+        // Function to fetch a new random character avatar from the Rick and Morty API
         function fetchRandomAvatar() {
             const avatarImage = document.getElementById('avatar');
 
@@ -138,9 +127,6 @@
 
             // Set the avatar image source
             avatarImage.src = `https://rickandmortyapi.com/api/character/avatar/${characterId}.jpeg`;
-
-            // Make the avatar visible
-            avatarImage.style.display = 'block';
         }
     </script>
 
