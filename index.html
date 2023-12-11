@@ -3,13 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mr. Pear</title>
+    <title>Mr. Pear's Website</title>
 </head>
 <body>
 
     <h1>Mr. Pear</h1>
 
-    <img src="image.jpeg" alt="Mr. Pear's Image">
+    <img src="image.png" alt="Mr. Pear's Image">
+
+    <h2>Locations from Rick and Morty API</h2>
+    <ul id="locations-list"></ul>
+
+    <script>
+        // Fetch data from the Rick and Morty API
+        fetch('https://rickandmortyapi.com/api/location')
+            .then(response => response.json())
+            .then(data => {
+                // Process the data and display it on the webpage
+                const locationsList = document.getElementById('locations-list');
+
+                data.results.forEach(location => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = location.name;
+                    locationsList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
 
 </body>
 </html>
