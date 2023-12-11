@@ -4,6 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mr. Pear's Website</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #4CAF50;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #4CAF50;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
 </head>
 <body>
 
@@ -12,23 +58,61 @@
     <img src="image.png" alt="Mr. Pear's Image">
 
     <h2>Locations from Rick and Morty API</h2>
-    <ul id="locations-list"></ul>
+    
+    <!-- Button to fetch and display or hide API data -->
+    <button onclick="toggleLocations()">Toggle Locations</button>
+
+    <!-- Table to display locations -->
+    <table id="locations-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Dimension</th>
+            </tr>
+        </thead>
+        <tbody id="locations-list"></tbody>
+    </table>
 
     <script>
-        // Fetch data from the Rick and Morty API
-        fetch('https://rickandmortyapi.com/api/location')
-            .then(response => response.json())
-            .then(data => {
-                // Process the data and display it on the webpage
-                const locationsList = document.getElementById('locations-list');
+        // Variable to track the visibility of locations
+        let locationsVisible = false;
 
-                data.results.forEach(location => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = location.name;
-                    locationsList.appendChild(listItem);
-                });
-            })
-            .catch(error => console.error('Error fetching data:', error));
+        // Function to fetch data from the Rick and Morty API and display or hide it
+        function toggleLocations() {
+            const locationsTable = document.getElementById('locations-table');
+            const locationsList = document.getElementById('locations-list');
+
+            if (!locationsVisible) {
+                // Fetch data from the Rick and Morty API
+                fetch('https://rickandmortyapi.com/api/location')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Process the data and display it on the webpage
+                        locationsList.innerHTML = ''; // Clear previous entries
+
+                        data.results.forEach(location => {
+                            const row = locationsList.insertRow();
+                            const cell1 = row.insertCell(0);
+                            const cell2 = row.insertCell(1);
+                            const cell3 = row.insertCell(2);
+
+                            cell1.textContent = location.name;
+                            cell2.textContent = location.type;
+                            cell3.textContent = location.dimension;
+                        });
+
+                        // Show the locations table
+                        locationsTable.style.display = 'table';
+                        locationsVisible = true;
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            } else {
+                // Hide the locations table
+                locationsTable.style.display = 'none';
+                locationsVisible = false;
+            }
+        }
     </script>
 
 </body>
