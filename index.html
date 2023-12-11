@@ -3,80 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mr. Pear's Website</title>
+    <title>Mr. Pear's Modern Website</title>
 
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background-color: #282c34;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #content {
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
         h1 {
-            color: #4CAF50;
+            color: #61dafb;
         }
 
         img {
             max-width: 100%;
             height: auto;
             margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
-            color: #4CAF50;
+            color: #61dafb;
         }
 
         button {
-            background-color: #4CAF50;
+            background-color: #61dafb;
             color: white;
-            padding: 10px;
+            padding: 10px 20px;
             margin-bottom: 10px;
             cursor: pointer;
+            border: none;
+            border-radius: 5px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            color: white;
         }
 
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 10px;
             text-align: left;
         }
 
         th {
-            background-color: #4CAF50;
+            background-color: #61dafb;
             color: white;
+        }
+
+        /* Floating elements */
+        .floating {
+            position: absolute;
+            animation: floatAnimation 5s infinite ease-in-out;
+        }
+
+        .floating:nth-child(2) {
+            animation-delay: 1s;
+        }
+
+        .floating:nth-child(3) {
+            animation-delay: 2s;
+        }
+
+        @keyframes floatAnimation {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
         }
     </style>
 </head>
 <body>
 
-    <h1>Mr. Pear</h1>
+    <!-- Floating elements -->
+    <div class="floating">🚀</div>
+    <div class="floating">🌟</div>
+    <div class="floating">🌈</div>
 
-    <!-- Button to fetch and display a new random character avatar -->
-    <button onclick="fetchRandomAvatar()">Fetch Random Avatar</button>
+    <div id="content">
+        <h1>Mr. Pear</h1>
 
-    <!-- Character avatar image -->
-    <img id="avatar" alt="Character Avatar">
+        <!-- Button to fetch and display a new random character avatar -->
+        <button onclick="fetchRandomAvatar()">Fetch Random Avatar</button>
 
-    <h2>Locations from Rick and Morty API</h2>
-    
-    <!-- Button to fetch and display or hide API data -->
-    <button onclick="toggleLocations()">Toggle Locations</button>
+        <!-- Character avatar image -->
+        <img id="avatar" alt="Character Avatar">
 
-    <!-- Table to display locations -->
-    <table id="locations-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Dimension</th>
-            </tr>
-        </thead>
-        <tbody id="locations-list"></tbody>
-    </table>
+        <h2>Locations from Rick and Morty API</h2>
+        
+        <!-- Button to fetch and display or hide API data -->
+        <button onclick="toggleLocations()">Toggle Locations</button>
+
+        <!-- Table to display locations -->
+        <table id="locations-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Dimension</th>
+                </tr>
+            </thead>
+            <tbody id="locations-list"></tbody>
+        </table>
+    </div>
 
     <script>
         // Variable to track the visibility of locations
@@ -107,13 +156,15 @@
                         });
 
                         // Show the locations table
-                        locationsTable.style.display = 'table';
+                        locationsTable.style.opacity = '1';
+                        locationsTable.style.transform = 'translateY(0)';
                         locationsVisible = true;
                     })
                     .catch(error => console.error('Error fetching data:', error));
             } else {
                 // Hide the locations table
-                locationsTable.style.display = 'none';
+                locationsTable.style.opacity = '0';
+                locationsTable.style.transform = 'translateY(20px)';
                 locationsVisible = false;
             }
         }
@@ -128,6 +179,9 @@
             // Set the avatar image source
             avatarImage.src = `https://rickandmortyapi.com/api/character/avatar/${characterId}.jpeg`;
         }
+
+        // Initial load: Fetch a random character avatar when the page loads
+        fetchRandomAvatar();
     </script>
 
 </body>
