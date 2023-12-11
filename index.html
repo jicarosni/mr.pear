@@ -43,8 +43,8 @@
         // Initial position and speed
         let x = Math.random() * (window.innerWidth - dvdLogo.clientWidth);
         let y = Math.random() * (window.innerHeight - dvdLogo.clientHeight);
-        let speedX = (Math.random() > 0.5 ? 1 : -1) * (2 + Math.random() * 2);
-        let speedY = (Math.random() > 0.5 ? 1 : -1) * (2 + Math.random() * 2);
+        let speedX = (Math.random() > 0.1 ? 1 : -1) * (2 + Math.random() * 2);
+        let speedY = (Math.random() > 0.1 ? 1 : -1) * (2 + Math.random() * 2);
 
         function moveDVDLogo() {
             x += speedX;
