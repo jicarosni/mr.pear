@@ -3,127 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arkanoid Game</title>
+    <title>Floating DVD Logo</title>
 
     <style>
         body {
             margin: 0;
+            overflow: hidden;
+            background-color: #111;
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background-color: #282c34;
         }
 
-        .game-container {
-            position: relative;
-            width: 400px;
-            height: 400px;
-            border: 2px solid #61dafb;
-            overflow: hidden;
-        }
-
-        .ball, .paddle, .brick {
+        #dvd-logo {
             position: absolute;
-            background-color: #61dafb;
-            width: 50px;
-            height: 20px;
-            border-radius: 5px;
-        }
-
-        .ball {
-            width: 20px;
-            height: 20px;
+            width: 80px;
+            height: 40px;
             background-color: #e50914;
-        }
-
-        .brick-row {
+            border-radius: 5px;
             display: flex;
-            flex-wrap: wrap;
-        }
-
-        .brick {
-            margin: 5px;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            user-select: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="game-container">
-        <div class="ball"></div>
-        <div class="paddle"></div>
-        <div class="brick-row">
-            <!-- Add multiple brick elements here -->
-        </div>
-    </div>
+    <div id="dvd-logo">DVD</div>
 
     <script>
-        const ball = document.querySelector('.ball');
-        const paddle = document.querySelector('.paddle');
-        const bricks = document.querySelectorAll('.brick');
-        const gameContainer = document.querySelector('.game-container');
+        const dvdLogo = document.getElementById('dvd-logo');
 
-        let ballX = 200;
-        let ballY = 300;
-        let ballSpeedX = 5;
-        let ballSpeedY = 5;
+        // Initial position and speed
+        let x = Math.random() * (window.innerWidth - dvdLogo.clientWidth);
+        let y = Math.random() * (window.innerHeight - dvdLogo.clientHeight);
+        let speedX = (Math.random() > 0.5 ? 1 : -1) * (2 + Math.random() * 2);
+        let speedY = (Math.random() > 0.5 ? 1 : -1) * (2 + Math.random() * 2);
 
-        function update() {
-            ballX += ballSpeedX;
-            ballY += ballSpeedY;
+        function moveDVDLogo() {
+            x += speedX;
+            y += speedY;
 
-            // Ball bouncing off walls
-            if (ballX > gameContainer.clientWidth - ball.clientWidth || ballX < 0) {
-                ballSpeedX = -ballSpeedX;
-            }
-            if (ballY < 0) {
-                ballSpeedY = -ballSpeedY;
+            // Bounce off the horizontal walls
+            if (x + dvdLogo.clientWidth > window.innerWidth || x < 0) {
+                speedX = -speedX;
             }
 
-            // Ball hitting the paddle
-            if (
-                ballY + ball.clientHeight > paddle.offsetTop &&
-                ballX + ball.clientWidth > paddle.offsetLeft &&
-                ballX < paddle.offsetLeft + paddle.clientWidth
-            ) {
-                ballSpeedY = -ballSpeedY;
+            // Bounce off the vertical walls
+            if (y + dvdLogo.clientHeight > window.innerHeight || y < 0) {
+                speedY = -speedY;
             }
 
-            // Ball hitting the bricks
-            bricks.forEach((brick) => {
-                if (
-                    ballY < brick.offsetTop + brick.clientHeight &&
-                    ballY + ball.clientHeight > brick.offsetTop &&
-                    ballX + ball.clientWidth > brick.offsetLeft &&
-                    ballX < brick.offsetLeft + brick.clientWidth
-                ) {
-                    ballSpeedY = -ballSpeedY;
-                    brick.style.display = 'none'; // Remove the brick
-                }
-            });
+            // Update the position
+            dvdLogo.style.left = `${x}px`;
+            dvdLogo.style.top = `${y}px`;
 
-            // Game over if the ball goes below the paddle
-            if (ballY > gameContainer.clientHeight) {
-                alert('Game Over!');
-                document.location.reload();
-            }
-
-            // Move the ball
-            ball.style.left = ballX + 'px';
-            ball.style.top = ballY + 'px';
-
-            requestAnimationFrame(update);
+            // Request the next animation frame
+            requestAnimationFrame(moveDVDLogo);
         }
 
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'ArrowLeft' && paddle.offsetLeft > 0) {
-                paddle.style.left = paddle.offsetLeft - 10 + 'px';
-            } else if (event.key === 'ArrowRight' && paddle.offsetLeft < gameContainer.clientWidth - paddle.clientWidth) {
-                paddle.style.left = paddle.offsetLeft + 10 + 'px';
-            }
-        });
+        // Start the animation
+        moveDVDLogo();
 
-        update();
+        // Optional: Add a click event to stop the animation
+        dvdLogo.addEventListener('click', () => {
+            cancelAnimationFrame(moveDVDLogo);
+        });
     </script>
 
 </body>
