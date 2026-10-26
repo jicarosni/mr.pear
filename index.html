@@ -1,81 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floating DVD Logo</title>
-
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #111;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        #dvd-logo {
-            position: absolute;
-            width: 80px;
-            height: 40px;
-            background-color: #e50914;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: Arial, sans-serif;
-            color: white;
-            font-size: 14px;
-            cursor: pointer;
-            user-select: none;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#12110f">
+  <title>Radar</title>
+  <meta name="description" content="Sledované motorky z DoneDeal a koncerty v Írsku, Taliansku a na Slovensku.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <header class="site-header">
+    <div class="wrap">
+      <p class="eyebrow">Jic</p>
+      <div class="title-row">
+        <h1>Radar</h1>
+        <p class="updated">Aktualizované <time id="updated">načítavam…</time> <span class="tz">Dublin</span></p>
+      </div>
+      <p class="lede">Sledované motorky z DoneDeal a koncerty v Írsku, Taliansku a na Slovensku.</p>
+      <nav class="jump" aria-label="Sekcie">
+        <a href="#motorky">Motorky</a>
+        <a href="#koncerty">Koncerty</a>
+      </nav>
+    </div>
+  </header>
 
-    <div id="dvd-logo">DVD</div>
+  <main class="wrap">
+    <section id="motorky" aria-labelledby="motorky-title">
+      <div class="section-head">
+        <h2 id="motorky-title">Motorky</h2>
+        <p id="bike-count" class="count" aria-live="polite"></p>
+      </div>
 
-    <script>
-        const dvdLogo = document.getElementById('dvd-logo');
+      <div class="toolbar">
+        <div class="control">
+          <p class="control-label" id="model-label">Model</p>
+          <div class="filters" role="group" aria-labelledby="model-label">
+            <button type="button" class="chip" data-model="all" aria-pressed="true">Všetky</button>
+            <button type="button" class="chip" data-model="trident" aria-pressed="false">Trident 660</button>
+            <button type="button" class="chip" data-model="cb500" aria-pressed="false">CB500F/Hornet</button>
+            <button type="button" class="chip" data-model="cb650r" aria-pressed="false">CB650R</button>
+          </div>
+        </div>
+        <label class="sort">
+          <span>Zoradiť</span>
+          <select id="bike-sort">
+            <option value="price-asc">Cena, od najnižšej</option>
+            <option value="price-desc">Cena, od najvyššej</option>
+            <option value="km-asc">Kilometre, od najnižších</option>
+            <option value="km-desc">Kilometre, od najvyšších</option>
+          </select>
+        </label>
+      </div>
 
-        // Initial position and speed
-        let x = Math.random() * (window.innerWidth - dvdLogo.clientWidth);
-        let y = Math.random() * (window.innerHeight - dvdLogo.clientHeight);
-        let speedX = (Math.random() > 0.5 ? 1 : -1) * (2 + Math.random() * 2);
-        let speedY = (Math.random() > 0.5 ? 1 : -1) * (2 + Math.random() * 2);
+      <div id="bike-list" class="bike-list">
+        <p class="empty">Načítavam…</p>
+      </div>
+      <div id="bike-gone"></div>
+    </section>
 
-        function moveDVDLogo() {
-            x += speedX;
-            y += speedY;
+    <section id="koncerty" aria-labelledby="koncerty-title">
+      <div class="section-head">
+        <h2 id="koncerty-title">Koncerty</h2>
+        <p id="gig-count" class="count" aria-live="polite"></p>
+      </div>
 
-            // Bounce off the horizontal walls
-            if (x + dvdLogo.clientWidth > window.innerWidth || x < 0) {
-                speedX = -speedX;
-            }
+      <div class="toolbar">
+        <div class="control">
+          <p class="control-label" id="region-label">Krajina</p>
+          <div class="filters" role="group" aria-labelledby="region-label">
+            <button type="button" class="chip" data-region="all" aria-pressed="true">Všetko</button>
+            <button type="button" class="chip" data-region="IE" aria-pressed="false">Írsko</button>
+            <button type="button" class="chip" data-region="IT" aria-pressed="false">Taliansko</button>
+            <button type="button" class="chip" data-region="SK" aria-pressed="false">Slovensko</button>
+          </div>
+        </div>
+      </div>
 
-            // Bounce off the vertical walls
-            if (y + dvdLogo.clientHeight > window.innerHeight || y < 0) {
-                speedY = -speedY;
-            }
+      <div id="gig-list" class="gig-list">
+        <p class="empty">Načítavam…</p>
+      </div>
+    </section>
+  </main>
 
-            // Update the position
-            dvdLogo.style.left = `${x}px`;
-            dvdLogo.style.top = `${y}px`;
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Súkromný prehľad. Minulé koncerty sa skrývajú samy.</p>
+    </div>
+  </footer>
 
-            // Request the next animation frame
-            requestAnimationFrame(moveDVDLogo);
-        }
-
-        // Start the animation
-        moveDVDLogo();
-
-        // Optional: Add a click event to stop the animation
-        dvdLogo.addEventListener('click', () => {
-            cancelAnimationFrame(moveDVDLogo);
-        });
-    </script>
-
+  <noscript>
+    <p class="noscript">Radar potrebuje JavaScript, aby načítal dáta.</p>
+  </noscript>
+  <script src="js/app.js"></script>
 </body>
 </html>
