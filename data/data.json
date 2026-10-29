@@ -1010,5 +1010,9 @@
    "note": "celé albumy To The Nameless Dead a The Gathering Wilderness",
    "first_seen": "2026-10-26"
   }
- ]
+ ],
+ "tracking_start": {
+  "bikes": "2026-10-24",
+  "concerts": "2026-10-26"
+ }
 }

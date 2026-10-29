@@ -24,12 +24,15 @@ Kódovanie UTF-8. Časy koncertov sú miestne časy konania, pole `updated` je �
 
 ```json
 {
-  "updated": "2026-10-26T22:56:05+00:00",
+  "updated": "2026-10-29T07:30:44+00:00",
+  "tracking_start": { "bikes": "2026-10-24", "concerts": "2026-10-26" },
   "bikes": [],
   "bikes_gone": [],
   "concerts": []
 }
 ```
+
+`tracking_start` je voliteľné. `bikes` a `concerts` sú dátumy `RRRR-MM-DD` v Europe/Dublin, kedy sa sledovanie začalo. Položka s `first_seen` v tento deň alebo skôr je počiatočný stav a nie je nová. Ak `tracking_start` alebo príslušný kľúč chýba, platí len 7-dňové okno od `updated`.
 
 ### `bikes`
 
@@ -49,7 +52,7 @@ Aktívne inzeráty.
 | `seller` | Predajca. Hodnota `private` sa zobrazí ako „súkromný“. |
 | `status` | `for sale` → na predaj, `deposit taken` → záloha. |
 | `change` | Krátky slovenský popis zmeny, napr. `bez zmeny`, `záloha`, `↓ z €7,600`, `NOVÉ`. Hodnota `NOVÉ` označí inzerát ako nový aj mimo 7-dňového okna. |
-| `first_seen` | Dátum `RRRR-MM-DD` v Europe/Dublin, kedy sa inzerát prvýkrát objavil. Nový je, ak tento deň spadá do posledných 7 dní vrátane dňa z `updated`. |
+| `first_seen` | Dátum `RRRR-MM-DD` v Europe/Dublin, kedy sa inzerát prvýkrát objavil. Nový je, ak tento deň spadá do posledných 7 dní vrátane dňa z `updated` a je neskôr ako `tracking_start.bikes`. |
 | `photo_url` | Záložná adresa fotky, ak lokálny súbor chýba. |
 | `photos` | Voliteľné. Stránka ho na zobrazenie nepotrebuje. |
 
@@ -64,7 +67,7 @@ Krátky zoznam stiahnutých inzerátov. Polia: `id`, `title`, `url`, `last_price
 | `artist` | Hlavný interpret. |
 | `support` | Pole mien predkapiel. Môže chýbať. |
 | `date` | `RRRR-MM-DD`. Dátum starší ako dnešok v Europe/Dublin sa nezobrazí. |
-| `first_seen` | Dátum `RRRR-MM-DD` v Europe/Dublin, kedy sa koncert prvýkrát objavil. Nový je, ak tento deň spadá do posledných 7 dní vrátane dňa z `updated`. |
+| `first_seen` | Dátum `RRRR-MM-DD` v Europe/Dublin, kedy sa koncert prvýkrát objavil. Nový je, ak tento deň spadá do posledných 7 dní vrátane dňa z `updated` a je neskôr ako `tracking_start.concerts`. |
 | `time` | Voliteľný čas `HH:MM`. |
 | `city`, `venue` | Mesto a miesto. |
 | `region` | Filter: `IE` Írsko (vrátane Belfastu), `IT` Taliansko, `SK` Slovensko. |

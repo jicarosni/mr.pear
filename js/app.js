@@ -201,12 +201,25 @@ function seenWithinWeek(firstSeen) {
   return firstSeen >= start && firstSeen <= end;
 }
 
+function trackingStart(kind) {
+  const value = state.data && state.data.tracking_start && state.data.tracking_start[kind];
+  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  return null;
+}
+
+function isNewBySeen(firstSeen, kind) {
+  if (!seenWithinWeek(firstSeen)) return false;
+  const baseline = trackingStart(kind);
+  if (!baseline) return true;
+  return firstSeen > baseline;
+}
+
 function isNewBike(bike) {
-  return String(bike.change || "") === "NOVÉ" || seenWithinWeek(bike.first_seen);
+  return String(bike.change || "") === "NOVÉ" || isNewBySeen(bike.first_seen, "bikes");
 }
 
 function isNewConcert(concert) {
-  return seenWithinWeek(concert.first_seen);
+  return isNewBySeen(concert.first_seen, "concerts");
 }
 
 function sortNewFirst(items, isNew, compare) {
