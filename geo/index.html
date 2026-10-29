@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Borderline · Guess the Country</title>
+<meta name="description" content="A geography game: a country is highlighted on a borders-only map, you name it. Easy, medium and hard levels for every continent.">
+<meta name="theme-color" content="#0f172a">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+<link rel="stylesheet" href="css/style.css?v=1">
+<script>
+  // apply saved theme before paint
+  (function(){try{var t=localStorage.getItem("geoquiz:theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t;}catch(e){}})();
+</script>
+</head>
+<body>
+<header class="topbar">
+  <button class="brand" id="homeBtn" title="Back to start" aria-label="Back to start">
+    <span class="logo">🌍</span><span class="brand-text">Border<b>line</b></span>
+  </button>
+  <div class="topbar-right">
+    <button class="icon-btn" id="themeBtn" title="Toggle dark mode" aria-label="Toggle dark mode">🌓</button>
+  </div>
+</header>
+
+<main>
+  <!-- START -->
+  <section id="screen-start" class="screen active">
+    <div class="hero">
+      <h1>Guess the country</h1>
+      <p class="sub">A country lights up on a map with nothing but borders. Can you name it?</p>
+    </div>
+
+    <h2 class="step"><span>1</span> Choose a map</h2>
+    <div class="grid regions" id="regionGrid" role="radiogroup" aria-label="Map"></div>
+
+    <h2 class="step"><span>2</span> Choose a level</h2>
+    <div class="grid levels" id="levelGrid" role="radiogroup" aria-label="Level"></div>
+
+    <div class="start-row">
+      <button class="btn primary big" id="startBtn">Start round ▶</button>
+      <p class="pool-info" id="poolInfo"></p>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section id="screen-game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><span class="hud-label">Map</span><span id="hudRegion">–</span></div>
+      <div class="hud-item"><span class="hud-label">Question</span><span id="hudQ">1/10</span></div>
+      <div class="hud-item"><span class="hud-label">Score</span><span id="hudScore">0</span></div>
+      <div class="hud-item"><span class="hud-label">Streak</span><span id="hudStreak">0</span></div>
+      <div class="hud-item timer" id="hudTimerWrap" hidden><span class="hud-label">Time</span><span id="hudTimer">20</span></div>
+    </div>
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+
+    <div class="game-layout">
+      <div class="map-wrap" id="mapWrap">
+        <svg id="map" role="img" aria-label="Map with one highlighted country"></svg>
+        <div class="map-tools">
+          <button class="icon-btn" id="zoomIn" title="Zoom in" aria-label="Zoom in">＋</button>
+          <button class="icon-btn" id="zoomOut" title="Zoom out" aria-label="Zoom out">－</button>
+          <button class="icon-btn" id="zoomFind" title="Show the highlighted country" aria-label="Show the highlighted country">◎</button>
+          <button class="icon-btn" id="zoomReset" title="Reset view" aria-label="Reset view">⤢</button>
+        </div>
+        <div class="map-hint">Drag to pan · scroll / pinch to zoom</div>
+      </div>
+
+      <div class="panel" id="panel">
+        <div id="askBox">
+          <h2 class="question">What country is this?</h2>
+          <form id="answerForm" autocomplete="off">
+            <div class="input-wrap">
+              <input id="answerInput" type="text" placeholder="Type the country name…" autocomplete="off" autocapitalize="words" spellcheck="false" aria-label="Your answer">
+              <ul class="suggest" id="suggest" role="listbox" hidden></ul>
+            </div>
+            <div class="row">
+              <button class="btn primary" type="submit" id="submitBtn">Submit</button>
+              <button class="btn ghost" type="button" id="hintBtn">Hint</button>
+              <button class="btn ghost" type="button" id="skipBtn">I don't know</button>
+            </div>
+          </form>
+          <div class="hint-box" id="hintBox" hidden></div>
+          <div class="choices" id="choices" hidden></div>
+        </div>
+
+        <div id="resultBox" class="result" hidden>
+          <div class="result-head" id="resultHead"></div>
+          <div class="result-body" id="resultBody"></div>
+          <button class="btn primary" id="nextBtn">Next ▶</button>
+          <p class="kbd-hint">Press <kbd>Enter</kbd> to continue</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUMMARY -->
+  <section id="screen-summary" class="screen">
+    <div class="summary-card">
+      <div class="trophy" id="sumEmoji">🏆</div>
+      <h1 id="sumTitle">Round complete</h1>
+      <p class="sub" id="sumSub"></p>
+      <div class="stats">
+        <div class="stat"><b id="sumScore">0</b><span>points</span></div>
+        <div class="stat"><b id="sumCorrect">0/10</b><span>correct</span></div>
+        <div class="stat"><b id="sumAcc">0%</b><span>accuracy</span></div>
+        <div class="stat"><b id="sumStreak">0</b><span>best streak</span></div>
+      </div>
+      <p class="best" id="sumBest"></p>
+      <div class="table-wrap">
+        <table class="review">
+          <thead><tr><th>#</th><th>Country</th><th>Your answer</th><th></th><th>Pts</th></tr></thead>
+          <tbody id="sumRows"></tbody>
+        </table>
+      </div>
+      <div class="row center">
+        <button class="btn primary big" id="againBtn">Play again ↻</button>
+        <button class="btn ghost" id="mistakesBtn">Practise my mistakes</button>
+        <button class="btn ghost" id="changeBtn">Change map / level</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">Map data: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth</a> (public domain) · Built with d3</footer>
+
+<script src="vendor/d3.min.js"></script>
+<script src="vendor/topojson-client.min.js"></script>
+<script src="data/world.js?v=1"></script>
+<script src="js/match.js?v=1"></script>
+<script src="js/app.js?v=1"></script>
+</body>
+</html>
