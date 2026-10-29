@@ -30,7 +30,11 @@ const state = {
   model: "all",
   sort: "price-asc",
   region: "all",
+  onlyNewBikes: false,
+  onlyNewGigs: false,
 };
+
+const EMPTY_NEW = "Za posledných 7 dní nič nové.";
 
 function el(tag, options = {}) {
   const node = document.createElement(tag);
@@ -169,6 +173,56 @@ function isUpcoming(date, today) {
   return typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date) && date >= today;
 }
 
+function addDays(isoDate, days) {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  const utc = new Date(Date.UTC(year, month - 1, day + days));
+  const y = utc.getUTCFullYear();
+  const m = String(utc.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(utc.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function referenceDay() {
+  const iso = state.data && state.data.updated;
+  const date = iso ? new Date(iso) : null;
+  if (!date || Number.isNaN(date.getTime())) return dublinToday();
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: DUBLIN,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+}
+
+function seenWithinWeek(firstSeen) {
+  if (typeof firstSeen !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(firstSeen)) return false;
+  const end = referenceDay();
+  const start = addDays(end, -6);
+  return firstSeen >= start && firstSeen <= end;
+}
+
+function isNewBike(bike) {
+  return String(bike.change || "") === "NOVÉ" || seenWithinWeek(bike.first_seen);
+}
+
+function isNewConcert(concert) {
+  return seenWithinWeek(concert.first_seen);
+}
+
+function sortNewFirst(items, isNew, compare) {
+  items.sort((a, b) => {
+    const aNew = isNew(a);
+    const bNew = isNew(b);
+    if (aNew !== bNew) return aNew ? -1 : 1;
+    return compare(a, b);
+  });
+  return items;
+}
+
+function newBadge() {
+  return el("span", { className: "badge badge-new", text: "NOVÉ" });
+}
+
 function compareBikes(a, b, sort) {
   const [key, direction] = sort.split("-");
   const sign = direction === "desc" ? -1 : 1;
@@ -222,8 +276,10 @@ function renderBikes() {
   const list = document.getElementById("bike-list");
   const gone = document.getElementById("bike-gone");
   const count = document.getElementById("bike-count");
-  const bikes = (state.data.bikes || []).filter((bike) => state.model === "all" || bike.model === state.model);
-  bikes.sort((a, b) => compareBikes(a, b, state.sort));
+  const bikes = (state.data.bikes || [])
+    .filter((bike) => state.model === "all" || bike.model === state.model)
+    .filter((bike) => !state.onlyNewBikes || isNewBike(bike));
+  sortNewFirst(bikes, isNewBike, (a, b) => compareBikes(a, b, state.sort));
 
   count.textContent = countPhrase(bikes.length, {
     one: "inzerát",
@@ -234,7 +290,10 @@ function renderBikes() {
 
   list.replaceChildren();
   if (!bikes.length) {
-    list.append(el("p", { className: "empty", text: "Žiadne inzeráty v tomto filtri." }));
+    list.append(el("p", {
+      className: "empty",
+      text: state.onlyNewBikes ? EMPTY_NEW : "Žiadne inzeráty v tomto filtri.",
+    }));
   } else {
     for (const bike of bikes) {
       const href = safeUrl(bike.url);
@@ -247,7 +306,8 @@ function renderBikes() {
       const seller = sellerLabel(bike.seller);
       const status = statusLabel(bike.status);
       const change = bike.change ? String(bike.change) : "";
-      const showChange = change && change.toLowerCase() !== status.toLowerCase();
+      const fresh = isNewBike(bike);
+      const showChange = change && change !== "NOVÉ" && change.toLowerCase() !== status.toLowerCase();
       let changeClass = "change";
       if (/↓|zľav|kles/i.test(change) || (dropped && change && change.toLowerCase() !== "bez zmeny")) {
         changeClass = "change change-drop";
@@ -291,6 +351,7 @@ function renderBikes() {
                 el("p", {
                   className: "sub",
                   children: [
+                    fresh ? newBadge() : null,
                     seller ? el("span", { className: "seller", text: seller }) : null,
                     status ? el("span", { className: statusClass(bike.status), text: status }) : null,
                     showChange ? el("span", { className: changeClass, text: change }) : null,
@@ -368,16 +429,20 @@ function renderConcerts() {
   const list = document.getElementById("gig-list");
   const count = document.getElementById("gig-count");
   const today = dublinToday();
-  const concerts = (state.data.concerts || [])
-    .filter((concert) => isUpcoming(concert.date, today))
-    .filter((concert) => state.region === "all" || concert.region === state.region)
-    .sort((a, b) => {
+  const concerts = sortNewFirst(
+    (state.data.concerts || [])
+      .filter((concert) => isUpcoming(concert.date, today))
+      .filter((concert) => state.region === "all" || concert.region === state.region)
+      .filter((concert) => !state.onlyNewGigs || isNewConcert(concert)),
+    isNewConcert,
+    (a, b) => {
       const byDate = String(a.date).localeCompare(String(b.date));
       if (byDate !== 0) return byDate;
       const byTime = String(a.time || "99:99").localeCompare(String(b.time || "99:99"));
       if (byTime !== 0) return byTime;
       return String(a.city || "").localeCompare(String(b.city || ""), "sk");
-    });
+    }
+  );
 
   count.textContent = countPhrase(concerts.length, {
     one: "koncert",
@@ -388,7 +453,10 @@ function renderConcerts() {
 
   list.replaceChildren();
   if (!concerts.length) {
-    list.append(el("p", { className: "empty", text: "Žiadne nadchádzajúce koncerty." }));
+    list.append(el("p", {
+      className: "empty",
+      text: state.onlyNewGigs ? EMPTY_NEW : "Žiadne nadchádzajúce koncerty.",
+    }));
     return;
   }
 
@@ -404,6 +472,7 @@ function renderConcerts() {
     const note = usefulNote(concert);
     const lineup = supportLine(concert.support);
     const sale = saleLabel(concert.on_sale);
+    const fresh = isNewConcert(concert);
 
     list.append(
       el("article", {
@@ -426,10 +495,11 @@ function renderConcerts() {
               el("p", { className: "where", text: whereLine(concert) }),
               lineup ? el("p", { className: "support", text: lineup }) : null,
               note ? el("p", { className: "note", text: note }) : null,
-              mark || sale
+              fresh || mark || sale
                 ? el("div", {
                     className: "gig-tags",
                     children: [
+                      fresh ? newBadge() : null,
                       mark ? el("span", { className: "badge badge-mark", text: mark }) : null,
                       sale ? el("span", { className: saleClass(concert.on_sale), text: sale }) : null,
                     ],
@@ -482,6 +552,18 @@ function bindControls() {
   document.getElementById("bike-sort").addEventListener("change", (event) => {
     state.sort = event.target.value;
     renderBikes();
+  });
+
+  document.getElementById("bike-only-new").addEventListener("click", (event) => {
+    state.onlyNewBikes = !state.onlyNewBikes;
+    event.currentTarget.setAttribute("aria-pressed", String(state.onlyNewBikes));
+    renderBikes();
+  });
+
+  document.getElementById("gig-only-new").addEventListener("click", (event) => {
+    state.onlyNewGigs = !state.onlyNewGigs;
+    event.currentTarget.setAttribute("aria-pressed", String(state.onlyNewGigs));
+    renderConcerts();
   });
 
   document.querySelectorAll("[data-region]").forEach((button) => {

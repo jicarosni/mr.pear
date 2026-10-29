@@ -175,9 +175,11 @@ h3 {
   text-transform: uppercase;
 }
 
+.filter-row,
 .filters {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.45rem;
 }
 
@@ -338,6 +340,14 @@ a.ticket {
   border-radius: 999px;
   font-size: 0.78rem;
   line-height: 1.45;
+}
+
+.badge-new {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 750;
+  letter-spacing: 0.06em;
 }
 
 .badge-sale {

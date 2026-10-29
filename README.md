@@ -48,13 +48,14 @@ Aktívne inzeráty.
 | `location` | Miesto. |
 | `seller` | Predajca. Hodnota `private` sa zobrazí ako „súkromný“. |
 | `status` | `for sale` → na predaj, `deposit taken` → záloha. |
-| `change` | Krátky slovenský popis zmeny, napr. `bez zmeny`, `záloha`, `↓ z €7,600`. |
+| `change` | Krátky slovenský popis zmeny, napr. `bez zmeny`, `záloha`, `↓ z €7,600`, `NOVÉ`. Hodnota `NOVÉ` označí inzerát ako nový aj mimo 7-dňového okna. |
+| `first_seen` | Dátum `RRRR-MM-DD` v Europe/Dublin, kedy sa inzerát prvýkrát objavil. Nový je, ak tento deň spadá do posledných 7 dní vrátane dňa z `updated`. |
 | `photo_url` | Záložná adresa fotky, ak lokálny súbor chýba. |
 | `photos` | Voliteľné. Stránka ho na zobrazenie nepotrebuje. |
 
 ### `bikes_gone`
 
-Krátky zoznam stiahnutých inzerátov. Polia: `id`, `title`, `url`, `last_price_eur`, `seller`, `location`, `status`, `change`.
+Krátky zoznam stiahnutých inzerátov. Polia: `id`, `title`, `url`, `last_price_eur`, `seller`, `location`, `status`, `change`, `first_seen` (dátum `RRRR-MM-DD` v Europe/Dublin, kedy sa inzerát prvýkrát objavil).
 
 ### `concerts`
 
@@ -63,6 +64,7 @@ Krátky zoznam stiahnutých inzerátov. Polia: `id`, `title`, `url`, `last_price
 | `artist` | Hlavný interpret. |
 | `support` | Pole mien predkapiel. Môže chýbať. |
 | `date` | `RRRR-MM-DD`. Dátum starší ako dnešok v Europe/Dublin sa nezobrazí. |
+| `first_seen` | Dátum `RRRR-MM-DD` v Europe/Dublin, kedy sa koncert prvýkrát objavil. Nový je, ak tento deň spadá do posledných 7 dní vrátane dňa z `updated`. |
 | `time` | Voliteľný čas `HH:MM`. |
 | `city`, `venue` | Mesto a miesto. |
 | `region` | Filter: `IE` Írsko (vrátane Belfastu), `IT` Taliansko, `SK` Slovensko. |
@@ -74,4 +76,4 @@ Krátky zoznam stiahnutých inzerátov. Polia: `id`, `title`, `url`, `last_price
 | `note` | Voliteľná poznámka pod koncertom. |
 | `match` | Interpret zo zoznamu, ak zhoda nie je hlavná kapela. Spolu s `tribute` v názve alebo v `note` označí tribut, inak zhodu cez predkapelu. |
 
-Koncerty sa radia podľa dátumu. Motorky sa v stránke filtrujú podľa `model` a radia podľa ceny alebo kilometrov.
+Nové položky sú v zozname vždy prvé. V rámci nových aj v rámci ostatných sa koncerty radia podľa dátumu a motorky podľa zvolenej ceny alebo kilometrov. Filtre modelu a krajiny sa kombinujú s prepínačom „Iba nové“.

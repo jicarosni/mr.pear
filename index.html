@@ -36,11 +36,14 @@
       <div class="toolbar">
         <div class="control">
           <p class="control-label" id="model-label">Model</p>
-          <div class="filters" role="group" aria-labelledby="model-label">
-            <button type="button" class="chip" data-model="all" aria-pressed="true">Všetky</button>
-            <button type="button" class="chip" data-model="trident" aria-pressed="false">Trident 660</button>
-            <button type="button" class="chip" data-model="cb500" aria-pressed="false">CB500F/Hornet</button>
-            <button type="button" class="chip" data-model="cb650r" aria-pressed="false">CB650R</button>
+          <div class="filter-row">
+            <div class="filters" role="group" aria-labelledby="model-label">
+              <button type="button" class="chip" data-model="all" aria-pressed="true">Všetky</button>
+              <button type="button" class="chip" data-model="trident" aria-pressed="false">Trident 660</button>
+              <button type="button" class="chip" data-model="cb500" aria-pressed="false">CB500F/Hornet</button>
+              <button type="button" class="chip" data-model="cb650r" aria-pressed="false">CB650R</button>
+            </div>
+            <button type="button" class="chip" id="bike-only-new" aria-pressed="false">Iba nové</button>
           </div>
         </div>
         <label class="sort">
@@ -69,11 +72,14 @@
       <div class="toolbar">
         <div class="control">
           <p class="control-label" id="region-label">Krajina</p>
-          <div class="filters" role="group" aria-labelledby="region-label">
-            <button type="button" class="chip" data-region="all" aria-pressed="true">Všetko</button>
-            <button type="button" class="chip" data-region="IE" aria-pressed="false">Írsko</button>
-            <button type="button" class="chip" data-region="IT" aria-pressed="false">Taliansko</button>
-            <button type="button" class="chip" data-region="SK" aria-pressed="false">Slovensko</button>
+          <div class="filter-row">
+            <div class="filters" role="group" aria-labelledby="region-label">
+              <button type="button" class="chip" data-region="all" aria-pressed="true">Všetko</button>
+              <button type="button" class="chip" data-region="IE" aria-pressed="false">Írsko</button>
+              <button type="button" class="chip" data-region="IT" aria-pressed="false">Taliansko</button>
+              <button type="button" class="chip" data-region="SK" aria-pressed="false">Slovensko</button>
+            </div>
+            <button type="button" class="chip" id="gig-only-new" aria-pressed="false">Iba nové</button>
           </div>
         </div>
       </div>
