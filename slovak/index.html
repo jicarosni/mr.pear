@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ahoj! – Slovacco per italiani</title>
+<meta name="description" content="Corso gratuito di slovacco (livello A1) per italiani principianti: lezioni brevi, pronuncia, flashcard con ripetizione dilazionata, esercizi e ripasso.">
+<meta name="theme-color" content="#0b4ea2">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#/" aria-label="Ahoj! home"><span class="logo">Ahoj!</span><span class="brand-sub">Slovacco per italiani</span></a>
+  <div class="tb-stats">
+    <span class="pill" title="Giorni di fila">🔥 <b id="tb-streak">0</b></span>
+    <span class="pill" title="XP totali">⭐ <b id="tb-xp">0</b></span>
+    <span class="ring" id="tb-goal" title="Obiettivo di oggi"></span>
+    <button class="icon-btn" id="theme-toggle" title="Tema chiaro/scuro" aria-label="Tema chiaro/scuro">🌓</button>
+  </div>
+</header>
+<nav class="nav" aria-label="Navigazione principale">
+  <a href="#/" data-r="home"><span>🏠</span>Home</a>
+  <a href="#/course" data-r="course"><span>📚</span>Corso</a>
+  <a href="#/review" data-r="review"><span>🔁</span>Ripasso</a>
+  <a href="#/alphabet" data-r="alphabet"><span>🔤</span>Alfabeto</a>
+  <a href="#/settings" data-r="settings"><span>⚙️</span>Impostazioni</a>
+</nav>
+<main id="view" class="container" tabindex="-1"></main>
+<footer class="foot container"><span>🇸🇰 ❤️ 🇮🇹</span> Ahoj! · corso A1 gratuito · i progressi restano nel tuo browser</footer>
+<div id="toasts" aria-live="polite"></div>
+<noscript><p style="padding:2rem">Per usare Ahoj! attiva JavaScript.</p></noscript>
+<script src="js/data.js?v=1"></script>
+<script src="js/app.js?v=1"></script>
+</body>
+</html>
